@@ -52,15 +52,12 @@ __weak int rockchip_dnl_key_pressed(void)
 {
 	int keyval = false;
 
-/*
- * This is a generic interface to read key
- */
-#if defined(CONFIG_DM_KEY)
+	/*
+	 * This is a generic interface to read key
+	 */
 	keyval = key_read(KEY_VOLUMEUP);
 
-	return key_is_pressed(keyval);
-
-#elif defined(CONFIG_ADC)
+#if defined(CONFIG_ADC)
 	const void *blob = gd->fdt_blob;
 	unsigned int val;
 	int channel = 1;
@@ -84,6 +81,10 @@ __weak int rockchip_dnl_key_pressed(void)
 		return true;
 	else
 		return false;
+
+#elif defined(CONFIG_DM_KEY)
+	return key_is_pressed(keyval);
+
 #endif
 
 	return keyval;
